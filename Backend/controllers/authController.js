@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); 
 const User = require('../models/User');
 
 exports.login = async (req, res) => {
@@ -11,7 +11,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    // Verify password
+    // Verify password using bcryptjs
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(400).json({ error: 'Invalid credentials' });
