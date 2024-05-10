@@ -6,7 +6,7 @@ const dotenv = require('dotenv')
 const app = express();
 app.use(express.json());
 dotenv.config();
-mongoose.connect('mongodb://localhost:27017/hotelmanagement', {
+mongoose.connect('mongodb+srv://naveenbaghel5429:9dIixiuN2ZkPTjDh@cluster0.tu0mvm8.mongodb.net/hotelsManagement?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
