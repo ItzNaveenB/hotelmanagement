@@ -6,7 +6,7 @@ const dotenv = require('dotenv')
 const app = express();
 app.use(express.json());
 dotenv.config();
-mongoose.connect('mongodb+srv://naveenbaghel5429:9dIixiuN2ZkPTjDh@cluster0.tu0mvm8.mongodb.net/hotelsManagement?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

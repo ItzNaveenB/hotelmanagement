@@ -46,7 +46,7 @@ exports.generateAndStoreUser = async (req, res) => {
       password: hashedPassword
     });
     await newUser.save();
-    await sendEmail(username, req.body.email, password);
+    await sendEmail(username, password, req.body.email); // Pass password as parameter
     res.json({ username, password, message: 'User created and stored successfully.' });
   } catch (error) {
     console.error('Error:', error);
@@ -54,7 +54,7 @@ exports.generateAndStoreUser = async (req, res) => {
   }
 };
 
-async function sendEmail(username, email, password) {
+async function sendEmail(username, password,email) { 
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -67,7 +67,7 @@ async function sendEmail(username, email, password) {
     from: process.env.GMAIL_EMAIL,
     to: email,
     subject: 'Your Account Details',
-    text: `Hello ${username},\n\nYour account has been successfully created.\nUsername: ${username}\nPassword: ${password}\n\nRegards,\nThe Team`
+    text: `Hello sir,\n\nYour account has been successfully created.\nUsername: ${username}\nPassword: ${password}\n\nRegards,\nThe Team`
   };
 
   await transporter.sendMail(mailOptions);
