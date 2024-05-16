@@ -52,7 +52,7 @@ exports.generateAndStoreUser = async (req, res) => {
       role: role 
     });
     await newUser.save();
-    await sendEmail(username, password, req.body.email,role); 
+    await sendEmail(username, password, req.body.email, role); // Pass role as parameter
     res.json({ username, password, role, message: 'User created and stored successfully.' });
   } catch (error) {
     console.error('Error:', error);
@@ -60,7 +60,7 @@ exports.generateAndStoreUser = async (req, res) => {
   }
 };
 
-async function sendEmail(username, password,role) { 
+async function sendEmail(username, password, role) { // Add role parameter
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -71,7 +71,7 @@ async function sendEmail(username, password,role) {
 
   let mailOptions = {
     from: process.env.GMAIL_EMAIL,
-    to: 'naveenbaghel5429@gmail.com',
+    to: "naveenbaghel5429@gmail.com",
     subject: 'Your Account Details',
     text: `Hello,\n\nYour account has been successfully created.\nUsername: ${username}\nPassword: ${password}\nRole: ${role}\n\nRegards,\nThe Team`
   };
