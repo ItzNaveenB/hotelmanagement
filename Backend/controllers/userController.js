@@ -38,7 +38,7 @@ function randPassword(letters, numbers, either) {
 
 exports.generateAndStoreUser = async (req, res) => {
   try {
-    const { role } = req.body; // Get role from request body
+    const { role, name, email } = req.body;
     if (!['admin', 'manager', 'receptionist', 'user'].includes(role)) {
       return res.status(400).json({ error: 'Invalid role' });
     }
@@ -49,16 +49,20 @@ exports.generateAndStoreUser = async (req, res) => {
     const newUser = new User({
       username,
       password: hashedPassword,
-      role: role 
+      role,
+      name,
+      email,
+      // createdBy: req.user._id 
     });
     await newUser.save();
-    await sendEmail(username, password, req.body.email, role); // Pass role as parameter
+    await sendEmail(username, password, email, role); 
     res.json({ username, password, role, message: 'User created and stored successfully.' });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 async function sendEmail(username, password, role) { // Add role parameter
   let transporter = nodemailer.createTransport({
