@@ -38,23 +38,29 @@ function randPassword(letters, numbers, either) {
 
 exports.generateAndStoreUser = async (req, res) => {
   try {
+    const { role } = req.body; // Get role from request body
+    if (!['admin', 'manager', 'receptionist', 'user'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
     const username = generateRandomString(8);
     const password = randPassword(8, 4, 2); 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       username,
-      password: hashedPassword
+      password: hashedPassword,
+      role: role 
     });
     await newUser.save();
-    await sendEmail(username, password, req.body.email); // Pass password as parameter
-    res.json({ username, password, message: 'User created and stored successfully.' });
+    await sendEmail(username, password, req.body.email,role); 
+    res.json({ username, password, role, message: 'User created and stored successfully.' });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-async function sendEmail(username, password,email) { 
+async function sendEmail(username, password,role) { 
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -67,7 +73,7 @@ async function sendEmail(username, password,email) {
     from: process.env.GMAIL_EMAIL,
     to: 'naveenbaghel5429@gmail.com',
     subject: 'Your Account Details',
-    text: `Hello sir,\n\nYour account has been successfully created.\nUsername: ${username}\nPassword: ${password}\n\nRegards,\nThe Team`
+    text: `Hello,\n\nYour account has been successfully created.\nUsername: ${username}\nPassword: ${password}\nRole: ${role}\n\nRegards,\nThe Team`
   };
 
   await transporter.sendMail(mailOptions);

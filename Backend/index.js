@@ -6,7 +6,7 @@ const dotenv = require('dotenv')
 const app = express();
 app.use(express.json());
 dotenv.config();
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect("mongodb://localhost:27017/hotelmanagement", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

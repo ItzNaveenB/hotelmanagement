@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ error: 'Invalid credentials' });
@@ -12,6 +12,9 @@ exports.login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(400).json({ error: 'Invalid credentials' });
+    }
+    if (user.role !== role) {
+      return res.status(403).json({ error: 'Unauthorized access' });
     }
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' }); 
     res.json({ message: 'Login successful', token });
