@@ -1,15 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv')
 const bodyParser = require('body-parser');
 const userRoute = require('./routes/userRoute')
 const authRoute = require('./routes/authRoutes')
-const dotenv = require('dotenv')
+const roomRoute = require('./routes/roomRoutes')
 const hotelRoutes = require('./routes/hotelRoutes')
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
 dotenv.config();
-mongoose.connect("mongodb://localhost:27017/hotelmanagement", {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -22,6 +23,7 @@ mongoose.connect("mongodb://localhost:27017/hotelmanagement", {
 app.use('/user', userRoute);
 app.use('/auth', authRoute);
 app.use('/api', hotelRoutes);
+app.use('/api',roomRoute)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

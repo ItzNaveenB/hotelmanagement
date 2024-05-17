@@ -18,7 +18,13 @@ const hotelSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }
+  },
+  rooms: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Room'
+    }
+  ]
 });
 
 const Hotel = mongoose.model('Hotel', hotelSchema);
