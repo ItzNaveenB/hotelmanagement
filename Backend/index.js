@@ -7,6 +7,7 @@ const authRoute = require('./routes/authRoutes')
 const roomRoute = require('./routes/roomRoutes')
 const hotelRoutes = require('./routes/hotelRoutes')
 const guestRoutes = require('./routes/guestRoutes');
+const roomAssignmentRoutes = require('./routes/roomAssignmentRoutes');
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
@@ -26,6 +27,7 @@ app.use('/auth', authRoute);
 app.use('/api', hotelRoutes);
 app.use('/api',roomRoute);
 app.use('/api', guestRoutes);
+app.use('/api', roomAssignmentRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
