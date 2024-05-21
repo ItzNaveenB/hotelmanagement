@@ -6,6 +6,7 @@ const userRoute = require('./routes/userRoute')
 const authRoute = require('./routes/authRoutes')
 const roomRoute = require('./routes/roomRoutes')
 const hotelRoutes = require('./routes/hotelRoutes')
+const guestRoutes = require('./routes/guestRoutes');
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
@@ -23,7 +24,8 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/user', userRoute);
 app.use('/auth', authRoute);
 app.use('/api', hotelRoutes);
-app.use('/api',roomRoute)
+app.use('/api',roomRoute);
+app.use('/api', guestRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
