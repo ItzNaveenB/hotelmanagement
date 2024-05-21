@@ -1,37 +1,39 @@
-const Hotel = require('../models/Hotel');
+const Rooms = require('../models/Rooms');
 
-exports.createHotel = async (req, res) => {
-  
+exports.createRoom = async (req, res) => {
+
   try {
-    const { name, address } = req.body;
+    const { name, details,roomType,hotel } = req.body;
     const createdBy = req.user._id;
-    const hotel = new Hotel({
+    const room = new Rooms({
       name,
-      address,
-      owner: createdBy,
+      details,
+      roomType,
+      hotel,
+      status:'vacant',
       createdBy
     });
-    await hotel.save();
-    res.json({ message: 'Hotel created successfully', hotel });
+    await room.save();
+    res.json({ message: 'Room created successfully', room });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-exports.getHotels = async (req, res) => {
+exports.getRooms = async (req, res) => {
   try {
-    const hotels = await Hotel.find();
-    res.json(hotels);
+    const rooms = await Rooms.find({hotel:req.query.hotelId}).populate('roomType');
+    res.json(rooms);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-exports.getHotelById = async (req, res) => {
+exports.getRoomById = async (req, res) => {
   try {
-    const hotel = await Hotel.findById(req.params.id);
+    const hotel = await Rooms.findById(req.params.id);
     if (!hotel) {
       return res.status(404).json({ error: 'Hotel not found' });
     }
@@ -42,9 +44,9 @@ exports.getHotelById = async (req, res) => {
   }
 };
 
-exports.updateHotel = async (req, res) => {
+exports.updateRoom = async (req, res) => {
   try {
-    const hotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const hotel = await Rooms.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!hotel) {
       return res.status(404).json({ error: 'Hotel not found' });
     }
@@ -55,9 +57,9 @@ exports.updateHotel = async (req, res) => {
   }
 };
 
-exports.deleteHotel = async (req, res) => {
+exports.deleteRoom = async (req, res) => {
   try {
-    const hotel = await Hotel.findByIdAndDelete(req.params.id);
+    const hotel = await Rooms.findByIdAndDelete(req.params.id);
     if (!hotel) {
       return res.status(404).json({ error: 'Hotel not found' });
     }
