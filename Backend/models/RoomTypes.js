@@ -17,6 +17,12 @@ const roomTypesSchema = new mongoose.Schema({
   details: {
     type: String,
   },
+  totalRooms:{
+    type:Number
+  },
+  availableRooms:{
+    type: Number
+  },
   images: [
     {
       type: String,

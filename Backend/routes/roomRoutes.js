@@ -13,6 +13,7 @@ router.post(
   roomController.createRoom
 );
 router.get("/rooms", roomController.getRooms);
+router.get("/rooms/:type", roomController.getRoomsByType);
 router.get("/room/:id", roomController.getRoomById);
 router.put(
   "/room/:id",
