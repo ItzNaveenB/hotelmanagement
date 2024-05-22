@@ -9,6 +9,7 @@ const hotelRoutes = require('./routes/hotelRoutes')
 const roomTypesRoutes = require('./routes/roomTypesRoutes')
 const roomRoutes = require('./routes/roomRoutes')
 const guestRoutes = require('./routes/guestRoutes')
+const roomAssignmentRoutes = require("./routes/roomAssignmentRoutes");
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use('/api', hotelRoutes);
 app.use("/api", roomRoutes);
 app.use("/api", roomTypesRoutes);
 app.use("/api", guestRoutes);
+app.use("/api", roomAssignmentRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

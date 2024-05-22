@@ -40,11 +40,20 @@ exports.getRooms = async (req, res) => {
 };
 exports.getRoomsByType = async (req, res) => {
   try {
+    const availRooms = []
     const rooms = await Rooms.find({
       hotel: req.query.hotelId,
       roomType: req.params.type,
     }).populate("roomType");
-    res.json(rooms);
+
+    if(rooms.length>0){
+     rooms?.forEach((room)=>{
+        if(room.status == 'vacant') availRooms.push(room)
+      })
+    }
+
+    res.json(availRooms);
+
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal server error" });

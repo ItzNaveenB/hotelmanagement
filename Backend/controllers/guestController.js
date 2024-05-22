@@ -14,7 +14,7 @@ exports.createGuest = async (req, res) => {
 // Get all guests
 exports.getAllGuests = async (req, res) => {
   try {
-    const guests = await Guest.find({hotel:req.query.hotelId}).populate('hotel');
+    const guests = await Guest.find({hotel:req.query.hotelId}).populate(['hotel','room','roomType']);
     res.status(200).json(guests);
   } catch (error) {
     res.status(400).json({ error: error.message });

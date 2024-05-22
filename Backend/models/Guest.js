@@ -32,6 +32,14 @@ const guestSchema = new mongoose.Schema({
     ref: 'Hotel',
     required: true
   },
+  room:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Rooms',
+  },
+  roomType:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'RoomTypes',
+  },
   comments: {
     type: String
   }
