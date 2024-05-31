@@ -1,5 +1,6 @@
 const Guest = require("../models/Guest");
-const RoomAssignment = require("../models/RoomAssignment");
+const Invoice = require("../models/Invoice");
+const Payment = require("../models/Payment");
 const Rooms = require("../models/Rooms");
 const RoomTypes = require("../models/RoomTypes");
 
@@ -27,7 +28,7 @@ exports.createRoomAssignment = async (req, res) => {
       return res.status(500).json({ error: "Room not available." });
     }
 
-    const newRoomAssignment = new RoomAssignment({
+    const newInvoice = new Invoice({
       guest,
       roomType,
       room,
@@ -41,12 +42,20 @@ exports.createRoomAssignment = async (req, res) => {
       leaseTo,
     });
 
-    await newRoomAssignment.save();
+    await newInvoice.save();
 
+    const newPayment = new Payment({
+      invoice: newInvoice._id,
+      total,paid,balance,
+      method:'cash',
+      transactionId:'12345'
+    })
+    await newPayment.save();
     await RoomType.updateOne({ $inc: { availableRooms: -1 } });
     await Room.updateOne({ status: "occupied" });
     await dbGuest.updateOne({ room, roomType });
-    res.status(201).json(newRoomAssignment);
+
+    res.status(201).json(newInvoice);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -55,7 +64,7 @@ exports.createRoomAssignment = async (req, res) => {
 
 exports.getAllRoomAssignments = async (req, res) => {
   try {
-    const roomAssignments = await RoomAssignment.find().populate("guest room");
+    const roomAssignments = await Invoice.find().populate(["guest","room"]);
     res.status(200).json(roomAssignments);
   } catch (error) {
     console.error("Error:", error);
@@ -65,7 +74,7 @@ exports.getAllRoomAssignments = async (req, res) => {
 
 exports.getRoomAssignmentById = async (req, res) => {
   try {
-    const roomAssignment = await RoomAssignment.findById(
+    const roomAssignment = await Invoice.findById(
       req.params.id
     ).populate("guest room");
     if (!roomAssignment) {
@@ -94,7 +103,7 @@ exports.updateRoomAssignment = async (req, res) => {
       leaseTo,
     } = req.body;
 
-    const updatedRoomAssignment = await RoomAssignment.findByIdAndUpdate(
+    const updatedRoomAssignment = await Invoice.findByIdAndUpdate(
       req.params.id,
       {
         guest,
@@ -124,7 +133,7 @@ exports.updateRoomAssignment = async (req, res) => {
 
 exports.deleteRoomAssignment = async (req, res) => {
   try {
-    const deletedRoomAssignment = await RoomAssignment.findByIdAndDelete(
+    const deletedRoomAssignment = await Invoice.findByIdAndDelete(
       req.params.id
     );
     if (!deletedRoomAssignment) {
@@ -145,15 +154,16 @@ exports.RetractRoom = async (req, res) => {
       room,
     } = req.body;
 
-    console.log(roomType,room,guest)
-
     const RoomType = await RoomTypes.findOne({ _id: roomType });
     const Room = await Rooms.findOne({ _id: room });
     const dbGuest = await Guest.findOne({ _id: guest });
-    
-    await RoomType.updateOne({ $inc: { availableRooms: 1 } });
+
+    if(RoomType.totalRooms>RoomType.availableRooms){
+      await RoomType.updateOne({ $inc: { availableRooms: 1 } });
+    }
+
     await Room.updateOne({ status: "vacant" });
-    // await dbGuest.updateOne({ room:, roomType:'' });
+    await dbGuest.updateOne({ room:null,roomType:null });
 
     res.status(200).json({ message: "Room assignment deleted successfully" });
   } catch (error) {

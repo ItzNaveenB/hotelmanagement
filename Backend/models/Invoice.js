@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const roomAssignmentSchema = new mongoose.Schema({
+const invoiceSchema = new mongoose.Schema({
   guest: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Guest",
@@ -50,6 +50,6 @@ const roomAssignmentSchema = new mongoose.Schema({
   },
 });
 
-const RoomAssignment = mongoose.model('RoomAssignment', roomAssignmentSchema);
+const Invoice = mongoose.model('Invoice', invoiceSchema);
 
-module.exports = RoomAssignment;
+module.exports = Invoice;
