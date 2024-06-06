@@ -9,6 +9,9 @@ const hotelRoutes = require('./routes/hotelRoutes')
 const guestRoutes = require('./routes/guestRoutes');
 const paymentRoutes = require('./routes/PaymentRoutes');
 const roomAssignmentRoutes = require('./routes/roomAssignmentRoutes');
+const expenseCategoryRoutes = require('./routes/expenseCategoryRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
+
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
@@ -30,6 +33,8 @@ app.use('/api',roomRoute);
 app.use('/api', guestRoutes);
 app.use('/api', roomAssignmentRoutes);
 app.use('/api',paymentRoutes);
+app.use('/api',expenseCategoryRoutes);
+app.use('/api', expenseRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
