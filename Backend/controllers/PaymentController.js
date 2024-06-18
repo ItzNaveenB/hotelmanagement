@@ -1,4 +1,5 @@
 const Payment = require('../models/Payment');
+const { generatePaymentPDF } = require('../utils/pdfUtils');
 
 // Create a new payment
 exports.createPayment = async (req, res) => {
@@ -46,6 +47,20 @@ exports.getPaymentById = async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.generatePaymentPDF = async (req, res) => {
+  try {
+      const payment = await Payment.findById(req.params.id);
+      if (!payment) {
+          return res.status(404).json({ error: 'Payment not found' });
+      }
+
+      generatePaymentPDF(payment, res);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
   }
 };
 

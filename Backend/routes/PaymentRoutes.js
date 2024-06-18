@@ -12,6 +12,8 @@ router.get('/payments', authenticateUser, checkAdminRole, paymentController.getA
 // Read a payment by ID
 router.get('/payments/:id', authenticateUser, checkAdminRole, paymentController.getPaymentById);
 
+router.get('/payments/:id/pdf', authenticateUser, checkAdminRole, paymentController.generatePaymentPDF);
+
 // // Update a payment
 // router.put('/payments/:id', authenticateUser, checkAdminRole, paymentController.updatePayment);
 
