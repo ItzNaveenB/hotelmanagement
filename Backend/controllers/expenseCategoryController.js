@@ -1,4 +1,4 @@
-const ExpenseCategory = require('../models/expenseCategory');
+const ExpenseCategory = require('../models/Category');
 
 // Create a new expense category
 exports.createExpenseCategory = async (req, res) => {

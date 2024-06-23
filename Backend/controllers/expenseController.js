@@ -1,5 +1,5 @@
 const Expense = require('../models/Expense');
-const ExpenseCategory = require('../models/ExpenseCategory');
+const ExpenseCategory = require('../models/Category');
 const multer = require('multer');
 const path = require('path');
 
