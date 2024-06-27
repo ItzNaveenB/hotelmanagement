@@ -5,21 +5,22 @@ const expenseSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'ExpenseCategory',
+  expenseCategory: {
+    type: String,
+    enum: ['Electricity invoice', 'Water tax invoice', 'Land tax invoice'],
     required: true
   },
-  amount: {
+  expenseAmount: {
     type: Number,
     required: true
   },
-  customerDetails: {
+  expenseDetails: {
     type: String,
     required: true
   },
   paymentMethod: {
     type: String,
+    enum: ['online', 'cash'],
     required: true
   },
   referenceNumber: {

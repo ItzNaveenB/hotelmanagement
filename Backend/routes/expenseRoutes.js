@@ -8,6 +8,5 @@ router.get('/expenses', authenticateUser, expenseController.getExpenses);
 router.get('/expenses/:id', authenticateUser, expenseController.getExpenseById);
 router.put('/expenses/:id', authenticateUser, checkAdminRole, expenseController.uploadReceipt, expenseController.updateExpense);
 router.delete('/expenses/:id', authenticateUser, checkAdminRole, expenseController.deleteExpense);
-router.get('/expenses/:id/pdf', authenticateUser, checkAdminRole, expenseController.generateExpensePDF);
 
 module.exports = router;

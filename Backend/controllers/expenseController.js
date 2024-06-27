@@ -1,5 +1,4 @@
 const Expense = require('../models/Expense');
-const ExpenseCategory = require('../models/Category');
 const multer = require('multer');
 const path = require('path');
 
@@ -19,19 +18,14 @@ exports.uploadReceipt = upload.single('expenseReceipt');
 
 exports.createExpense = async (req, res) => {
   try {
-    const { expenseName, category, amount, customerDetails, paymentMethod, referenceNumber, expenseDate, notes } = req.body;
+    const { expenseName, expenseCategory, expenseAmount, expenseDetails, paymentMethod, referenceNumber, expenseDate, notes } = req.body;
     const expenseReceipt = req.file ? req.file.path : '';
-
-    const expenseCategory = await ExpenseCategory.findById(category);
-    if (!expenseCategory) {
-      return res.status(404).json({ error: 'Category not found' });
-    }
 
     const newExpense = new Expense({
       expenseName,
-      category,
-      amount,
-      customerDetails,
+      expenseCategory,
+      expenseAmount,
+      expenseDetails,
       paymentMethod,
       referenceNumber,
       expenseDate,
@@ -49,7 +43,7 @@ exports.createExpense = async (req, res) => {
 
 exports.getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find().populate('category');
+    const expenses = await Expense.find();
     res.json(expenses);
   } catch (error) {
     console.error('Error:', error);
@@ -59,7 +53,7 @@ exports.getExpenses = async (req, res) => {
 
 exports.getExpenseById = async (req, res) => {
   try {
-    const expense = await Expense.findById(req.params.id).populate('category');
+    const expense = await Expense.findById(req.params.id);
     if (!expense) {
       return res.status(404).json({ error: 'Expense not found' });
     }
@@ -72,7 +66,7 @@ exports.getExpenseById = async (req, res) => {
 
 exports.updateExpense = async (req, res) => {
   try {
-    const { expenseName, category, amount, customerDetails, paymentMethod, referenceNumber, expenseDate, notes } = req.body;
+    const { expenseName, expenseCategory, expenseAmount, expenseDetails, paymentMethod, referenceNumber, expenseDate, notes } = req.body;
     const expenseReceipt = req.file ? req.file.path : '';
 
     const expense = await Expense.findById(req.params.id);
@@ -80,15 +74,10 @@ exports.updateExpense = async (req, res) => {
       return res.status(404).json({ error: 'Expense not found' });
     }
 
-    const expenseCategory = await ExpenseCategory.findById(category);
-    if (!expenseCategory) {
-      return res.status(404).json({ error: 'Category not found' });
-    }
-
     expense.expenseName = expenseName;
-    expense.category = category;
-    expense.amount = amount;
-    expense.customerDetails = customerDetails;
+    expense.expenseCategory = expenseCategory;
+    expense.expenseAmount = expenseAmount;
+    expense.expenseDetails = expenseDetails;
     expense.paymentMethod = paymentMethod;
     expense.referenceNumber = referenceNumber;
     expense.expenseDate = expenseDate;
@@ -114,21 +103,5 @@ exports.deleteExpense = async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-
-
-exports.generateExpensePDF = async (req, res) => {
-  try {
-      const expense = await Expense.findById(req.params.id).populate('category createdBy', 'name');
-      if (!expense) {
-          return res.status(404).json({ error: 'Expense not found' });
-      }
-
-      generateExpensePDF(expense, res);
-  } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
   }
 };
