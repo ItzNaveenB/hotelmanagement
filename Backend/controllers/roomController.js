@@ -26,17 +26,22 @@ exports.getRooms = async (req, res) => {
   }
 };
 
-exports.getRoomById = async (req, res) => {
-  try {
-    const room = await Room.findById(req.params.id).populate('hotel');
-    if (!room) {
-      return res.status(404).json({ error: 'Room not found' });
+async function getRoomById(req, res) {
+    const roomId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(roomId)) {
+        return res.status(400).send('Invalid Room ID');
     }
-    res.json(room);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
+
+    try {
+        const room = await RoomTypes.findById(roomId);
+        if (!room) {
+            return res.status(404).send('Room not found');
+        }
+        res.json(room);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
 
 exports.updateRoom = async (req, res) => {
   try {
