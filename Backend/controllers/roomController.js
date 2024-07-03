@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Room = require('../models/Room');
 const Hotel = require('../models/Hotel');
 
@@ -26,22 +27,22 @@ exports.getRooms = async (req, res) => {
   }
 };
 
-async function getRoomById(req, res) {
-    const roomId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(roomId)) {
-        return res.status(400).send('Invalid Room ID');
-    }
+exports.getRoomById = async (req, res) => {
+  const roomId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(roomId)) {
+    return res.status(400).send('Invalid Room ID');
+  }
 
-    try {
-        const room = await RoomTypes.findById(roomId);
-        if (!room) {
-            return res.status(404).send('Room not found');
-        }
-        res.json(room);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-}
+  try {
+    const room = await Room.findById(roomId).populate('hotel');
+    if (!room) {
+      return res.status(404).send('Room not found');
+    }
+    res.json(room);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 
 exports.updateRoom = async (req, res) => {
   try {
@@ -56,7 +57,7 @@ exports.updateRoom = async (req, res) => {
     }
     res.json(room);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status500().json({ error: 'Internal server error' });
   }
 };
 

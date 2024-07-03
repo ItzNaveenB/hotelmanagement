@@ -12,6 +12,7 @@ const roomAssignmentRoutes = require('./routes/roomAssignmentRoutes');
 const expenseCategoryRoutes = require('./routes/expenseCategoryRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const extraServiceRoutes = require('./routes/extraServiceRoutes');
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,7 @@ app.use('/api',paymentRoutes);
 app.use('/api',expenseCategoryRoutes);
 app.use('/api', expenseRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api', extraServiceRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
